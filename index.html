@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cute animal drawing and coloring website for kids.">
+  <title>Do Art, Be Art 🎨</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff7fc;
+      color: #59445f;
+    }
+
+    header {
+      background: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .logo {
+      color: #ef69a5;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: #59445f;
+      text-decoration: none;
+      margin: 8px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 55px 15px;
+      background: linear-gradient(135deg, #ffe0ed, #e9e0ff, #dffff0);
+    }
+
+    .hero h1 {
+      font-size: clamp(35px, 7vw, 60px);
+    }
+
+    .hero h1 span { color: #ec5899; }
+
+    .hero p {
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 5px;
+      background: #ff79ad;
+      color: white;
+      font-weight: bold;
+    }
+
+    .purple {
+      background: #e7dcff;
+      color: #59445f;
+    }
+
+    section {
+      padding: 30px 5%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin: 20px 0;
+    }
+
+    .filters button {
+      background: white;
+      color: #59445f;
+      border: 2px solid #f6d8e8;
+    }
+
+    .filters button.active {
+      background: #ffd9e9;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      text-align: center;
+      background: white;
+      border: 2px solid #f7e2ef;
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .animal {
+      font-size: 75px;
+      padding: 20px 5px;
+      border-radius: 12px;
+      background: #fff0f7;
+    }
+
+    #studio {
+      background: #fff0f7;
+      border-radius: 22px;
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      gap: 18px;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: white;
+      border: 3px dashed #f3b5d1;
+      border-radius: 15px;
+      touch-action: none;
+    }
+
+    .tools {
+      background: white;
+      border-radius: 15px;
+      padding: 15px;
+    }
+
+    .palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .color {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+    }
+
+    input[type="range"] { width: 100%; }
+
+    footer {
+      background: #ffe5f1;
+      text-align: center;
+      padding: 30px 10px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 700px) {
+      .gallery { grid-template-columns: repeat(2, 1fr); }
+      .studio-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🎨 Do Art, Be Art</div>
+  <nav>
+    <a href="#animals">Coloring Pages</a>
+    <a href="#studio">Draw Online</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div style="font-size:50px">🐻 🐰 🐳 🐠</div>
+  <h1>Do Art, <span>Be Art!</span> ✨</h1>
+  <p>
+    Welcome, little artist! 💗<br>
+    Choose cute animals, color your world and have fun!
+  </p>
+  <a href="#animals"><button>Explore Animals 🎨</button></a>
+  <a href="#studio"><button class="purple">Start Drawing ✏️</button></a>
+</div>
+
+<section id="animals">
+  <h2>🌷 Cute Animal Coloring Pages</h2>
+  <p>Choose your favorite animal!</p>
+
+  <div class="filters">
+    <button class="active" data-filter="all">All Animals</button>
+    <button data-filter="land">🐾 Land Animals</button>
+    <button data-filter="sea">🌊 Sea Animals</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<section id="studio">
+  <h2>🖍️ My Little Art Studio</h2>
+  <p>Draw, color and save your artwork!</p>
+
+  <div class="studio-grid">
+    <div>
+      <canvas id="canvas" width="800" height="800"></canvas>
+    </div>
+
+    <div class="tools">
+      <h3>🎨 Choose a Color</h3>
+      <div class="palette" id="palette"></div>
+
+      <p>Custom color</p>
+      <input type="color" id="customColor" value="#ff79ad">
+
+      <p>Brush size</p>
+      <input type="range" id="brushSize" min="2" max="40" value="10">
+
+      <br><br>
+      <button id="eraser">🧽 Eraser</button>
+      <button class="purple" id="undo">↩ Undo</button>
+      <button class="purple" id="clear">Clear</button>
+      <button id="save">⬇ Save Drawing</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Made with love for little artists 💗<br>
+  Designed By Sachin Bala 🫶🏻🎀
+</footer>
+
+<script>
+const animals = [
+  {name:"Bear", emoji:"🐻", type:"land"},
+  {name:"Bunny", emoji:"🐰", type:"land"},
+  {name:"Kitten", emoji:"🐱", type:"land"},
+  {name:"Puppy", emoji:"🐶", type:"land"},
+  {name:"Fox", emoji:"🦊", type:"land"},
+  {name:"Panda", emoji:"🐼", type:"land"},
+  {name:"Chick", emoji:"🐥", type:"land"},
+  {name:"Lion", emoji:"🦁", type:"land"},
+  {name:"Fish", emoji:"🐠", type:"sea"},
+  {name:"Whale", emoji:"🐳", type:"sea"},
+  {name:"Octopus", emoji:"🐙", type:"sea"},
+  {name:"Crab", emoji:"🦀", type:"sea"},
+  {name:"Turtle", emoji:"🐢", type:"sea"},
+  {name:"Dolphin", emoji:"🐬", type:"sea"},
+  {name:"Penguin", emoji:"🐧", type:"sea"},
+  {name:"Starfish", emoji:"⭐", type:"sea"}
+];
+
+const gallery = document.getElementById("gallery");
+
+function showAnimals(filter = "all") {
+  gallery.innerHTML = "";
+
+  animals.filter(animal =>
+    filter === "all" || animal.type === filter
+  ).forEach(animal => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <div class="animal">${animal.emoji}</div>
+      <h3>${animal.name}</h3>
+      <button>Draw This Animal 🎨</button>
+    `;
+
+    card.querySelector("button").onclick = () => {
+      document.getElementById("studio").scrollIntoView({
+        behavior: "smooth"
+      });
+      drawAnimal(animal.emoji, animal.name);
+    };
+
+    gallery.appendChild(card);
+  });
+}
+
+document.querySelectorAll("[data-filter]").forEach(button => {
+  button.onclick = () => {
+    document.querySelectorAll("[data-filter]").forEach(b =>
+      b.classList.remove("active")
+    );
+    button.classList.add("active");
+    showAnimals(button.dataset.filter);
+  };
+});
+
+showAnimals();
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let color = "#ff79ad";
+let drawing = false;
+let history = [];
+
+function whiteCanvas() {
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function saveHistory() {
+  history.push(canvas.toDataURL());
+  if (history.length > 20) history.shift();
+}
+
+whiteCanvas();
+saveHistory();
+
+const colors = [
+  "#ff79ad", "#ff4f81", "#ff9f43", "#ffd93d",
+  "#8bd450", "#37c9a5", "#54b9f5", "#7378ff",
+  "#bd83f5", "#8b5e3c", "#333333", "#ffffff"
+];
+
+const palette = document.getElementById("palette");
+
+colors.forEach(c => {
+  const button = document.createElement("button");
+  button.className = "color";
+  button.style.background = c;
+  button.title = c;
+
+  button.onclick = () => {
+    color = c;
+    document.getElementById("customColor").value = c;
+  };
+
+  palette.appendChild(button);
+});
+
+document.getElementById("customColor").oninput = event => {
+  color = event.target.value;
+};
+
+function getPoint(event) {
+  const rect = canvas.getBoundingClientRect();
+
+  return {
+    x: (event.clientX - rect.left) * canvas.width / rect.width,
+    y: (event.clientY - rect.top) * canvas.height / rect.height
+  };
+}
+
+canvas.onpointerdown = event => {
+  drawing = true;
+  canvas.setPointerCapture(event.pointerId);
+
+  const p = getPoint(event);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.lineWidth = document.getElementById("brushSize").value;
+  ctx.strokeStyle = color;
+};
+
+canvas.onpointermove = event => {
+  if (!drawing) return;
+
+  const p = getPoint(event);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+};
+
+function stopDrawing() {
+  if (drawing) {
+    drawing = false;
+    saveHistory();
+  }
+}
+
+canvas.onpointerup = stopDrawing;
+canvas.onpointercancel = stopDrawing;
+
+document.getElementById("customColor").oninput = event => {
+  color = event.target.value;
+};
+
+document.getElementById("eraser").onclick = () => {
+  color = "#ffffff";
+  document.getElementById("customColor").value = color;
+  document.getElementById("brushSize").value = 25;
+};
+
+document.getElementById("undo").onclick = () => {
+  if (history.length > 1) {
+    history.pop();
+    const image = new Image();
+
+    image.onload = () => {
+      whiteCanvas();
+      ctx.drawImage(image, 0, 0);
+    };
+
+    image.src = history[history.length - 1];
+  }
+};
+
+document.getElementById("clear").onclick = () => {
+  if (confirm("Clear your drawing?")) {
+    whiteCanvas();
+    saveHistory();
+  }
+};
+
+document.getElementById("save").onclick = () => {
+  const link = document.createElement("a");
+  link.download = "my-artwork.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+};
+
+function drawAnimal(emoji, name) {
+  whiteCanvas();
+
+  ctx.fillStyle = "#403747";
+  ctx.textAlign = "center";
+  ctx.font = "bold 48px Arial";
+  ctx.fillText(name + " Coloring Page", 400, 100);
+
+  ctx.font = '300px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+  ctx.fillText(emoji, 400, 520);
+
+  saveHistory();
+}
+</script>
+
+</body>
+</html>
